@@ -39,6 +39,15 @@ userSchema.pre('save', async function() {
     }
 })
 
+userSchema.statics.getByCreds = async (userName,password) => {
+    const user =await User.findOne({userName:userName})
+    console.log(user)
+    if(!await bcrypt.compareSync(password,user.password))
+    {
+        throw new Error('invalid password')
+    }
+    return user
+}
 userSchema.methods.generateToken = async function(){
     const user = this
     const token = await jwt.sign({_id: user.userName},process.env.JWT_SECRET)

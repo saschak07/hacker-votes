@@ -16,4 +16,27 @@ router.post('/user/signUp', async (req,res)=> {
     }
 })
 
+router.post('/user/logout',auth,async (req,res) => {
+    try{
+        const user = req.user
+        user.tokens = user.tokens.filter( item => item.token !== req.token)
+        await user.save()
+        res.status(200).send()
+    }catch(error){
+        console.log(error)
+        res.status(500).send({errorMsg: error.message})
+    }
+})
+
+router.post('/user/login',async (req,res) => {
+    try{
+        const user = await User.getByCreds(req.body.userName,req.body.password)
+        let token = await user.generateToken()
+        res.status(200).send({token:token})
+    }catch(error){
+        console.log(error)
+        res.status(401).send({errorMsg: error.message})
+    }
+})
+
 module.exports = router
