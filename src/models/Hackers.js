@@ -14,6 +14,9 @@ const hackerSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    photo:{
+        type: Buffer
+    },
     expertIn: {
         dataStructure : {
             type: Number,

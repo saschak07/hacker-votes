@@ -1,6 +1,8 @@
 const Hacker = require('../models/Hackers')
 const express = require('express')
 const auth = require('../middleware/auth')
+const multer = require('multer')
+const sharp = require('sharp')
 
 const router = new express.Router()
 
@@ -18,7 +20,7 @@ router.get('/hackers',auth, async (req,res)=> {
     }
 })
 
-router.post('/hackers',auth, async (req,res)=> {
+router.post('/hacker',auth, async (req,res)=> {
     try{
         const user = req.user
         if(user.isAdmin){
@@ -67,6 +69,47 @@ router.put('/hackers/vote/:id',auth, async(req,res)=>{
         res.status(200).send(hacker)
     }catch(error){
         res.status(500).send({errMsg:error.message})
+    }
+})
+
+const upload = multer({
+    limits:{
+        fileSize: 1000000
+    },
+    fileFilter(req, file, cb) {
+        if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+            return cb(new Error('Please upload an image'))
+        }
+
+        cb(undefined, true)
+    }
+})
+
+router.post('/hacker/:id/photo', auth, upload.single('photo'), async(req,res) =>{
+    try{
+        const photoBuffer = await sharp(req.file.buffer).resize({width: 150, height:150}).png().toBuffer()
+        const hacker = await Hacker.findById(req.params.id)
+        hacker.photo = photoBuffer
+        await hacker.save()
+        res.status(200).send('successful upload')
+
+    }catch(e){
+        res.status(500).send({errMsg: e.message})
+    }
+})
+
+router.get('/hacker/:id/photo', async(req,res)=> {
+    try{
+        const hacker = await Hacker.findById(req.params.id)
+        if(!hacker || !hacker.photo){
+            throw new Error('no image found')
+        }
+        else{
+            res.set('contentType', 'image/png')
+            res.send(hacker.photo)
+        }
+    }catch(e){
+        res.status(500).send({errMsg: e.message})
     }
 })
 
