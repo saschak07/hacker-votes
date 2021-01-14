@@ -23,12 +23,9 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    tokens: [{
-        token: {
-            type: String,
-            required: true
-        }
-    }]
+    token: {
+        type: String
+    }
 })
 
 
@@ -51,7 +48,7 @@ userSchema.statics.getByCreds = async (userName,password) => {
 userSchema.methods.generateToken = async function(){
     const user = this
     const token = await jwt.sign({_id: user.userName},process.env.JWT_SECRET)
-    user.tokens = user.tokens.concat({token})
+    user.token = token
     await user.save()
     return token
 }

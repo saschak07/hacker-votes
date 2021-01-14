@@ -48,6 +48,13 @@ const hackerSchema = new mongoose.Schema({
 
 })
 
+hackerSchema.methods.toJSON = function() {
+    const hacker = this
+    const hackerObject = hacker.toObject()
+    delete hackerObject.photo
+    return hackerObject 
+}
+
 const Hacker = mongoose.model('hacker',hackerSchema)
 
 module.exports = Hacker

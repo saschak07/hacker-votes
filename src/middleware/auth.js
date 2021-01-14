@@ -13,9 +13,9 @@ const auth = async (req,res,next) => {
         const user = await User.findOne({userName: decoded._id})
         console.log(user)
         console.log(token_received)
-        const savedToken = user.tokens.filter(instance => instance.token===token_received)
+        const savedToken = user.token
         console.log(savedToken)
-        if(!user || savedToken.length===0){
+        if(!user || savedToken !== token_received){
             throw new Error('invalid token inserted')
         }
         req.user = user
