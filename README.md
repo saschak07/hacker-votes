@@ -111,5 +111,70 @@ Response:
 }
 ```
 
+**Vote:-**
+
+
+`PUT: /hackers/vote/{hacker_id}`
+
+
+header:
+
+
+`Authorization: Baisc <JWT_TOKEN>`
+
+
+Response:
+
+```
+successfully voted
+```
+
+**Get all hackers:-**
+
+`GET: /hackers`
+
+header:
+
+
+`Authorization: Baisc <JWT_TOKEN>`
+
+Response:
+
+```
+[
+    {
+        "expertIn": {
+            "dataStructure": 5,
+            "algorithm": 5,
+            "cplusplus": 0,
+            "java": 7,
+            "python": 0
+        },
+        "noOfChanllenges": 6,
+        "expertiseLevel": 5,
+        "votes": 1,
+        "_id": "609ffc235be2cc00172cd278",
+        "name": "John Doe",
+        "__v": 0
+    }
+]
+```
+
+**Logout :-**
+
+`POST: /user/logout`
+
+header:
+
+
+`Authorization: Baisc <JWT_TOKEN>`
+
+Response:
+
+```
+200 OK for successful logout
+
+```
+
 
 
